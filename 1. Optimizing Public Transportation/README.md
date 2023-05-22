@@ -26,24 +26,27 @@ The application can be run in your own machine using the Host URL directly or us
 
 To start the simulation, it is critical to open a terminal window for each piece of the code and run both producers and consumers the same time.
 
-**1. For Producers:**
-
+Consider the following configuration commands to be run before each application:
 - virtualenv venv
 - . venv/bin/activate
 - pip install -r requirements.txt
+
+**1. Kick-off the Producers:** this will trigger the script that creates simulated weather data to be ingested.
+
+- configuration commands
 - python simulation.py
 
-**2. For the Faust Stream Processing App:**
+**2. Start the Faust Stream Processing App:** this will start the ETL from the topic "org.chicago.cta.stations" and sink it into "org.chicago.cta.stations.table.v1"
 
-- Same commands as #1
+- configuration commands
 - faust -A faust_stream worker -l info
 
-**3. For running the KSQL Creation Script:**
+**3. Run the KSQL Creation Script:** to create the tables to be consumed by the final application.
 
-- Same commands as #1
+- configuration commands
 - python ksql.py
 
-**4. For running the consumer:**
+**4. Start the Consumer (Dashboard Server):** so the Dashboard can start consuming information from the topics and display table data in the UI.
 
-- Same commands as #1
+- configuration commands
 - python server.py

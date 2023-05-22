@@ -8,10 +8,10 @@ To make the information available on the UI, it is first required to develop the
 
 ![alt_text](./images/architecture.png "Architecture")
 
-- Kafka Connect is used to facilitate the integration with the PostgresDB that is used by the Chicago Transit Authorit.
-- REST Proxy is used because the Weather application in which we will be retrieving data from is a legacy application that doesn't have a Kafka Conenctor available.
-- KSQL is the SQL-like Stream Processing Frameowkr that can be used for simple stream processing tasks, such as filtering, aggregating and joining streams of data with ease of use and minimal coding.
-- Faust is the default Stream Processing Framework for creating pipelines, ingesting, and transforming data in Kafka using Python to enhance and custom the streaming process when more complex requirements are in place.
+- **Kafka Connect** is used to facilitate the integration with the PostgresDB that is used by the Chicago Transit Authorit.
+- **REST Proxy** is used because the Weather application in which we will be retrieving data from is a legacy application that doesn't have a Kafka Conenctor available.
+- **KSQL** is the SQL-like Stream Processing Frameowkr that can be used for simple stream processing tasks, such as filtering, aggregating and joining streams of data with ease of use and minimal coding.
+- **Faust** is the default Stream Processing Framework for creating pipelines, ingesting, and transforming data in Kafka using Python to enhance and custom the streaming process when more complex requirements are in place.
 
 The detailed architecture at the topic level can be seen below:
 

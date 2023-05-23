@@ -19,7 +19,7 @@ Therefore, the technical challenge consists of generating a new payload in a Kaf
 
 ### Running the Application (test mode)
 
-Please, scroll down to Running the Application (prod mode) for the definitive test.
+```Please, scroll down to Running the Application (prod mode) for the definitive test.```
 
 **1. Use docker compose up file at the root of the repository to create 9 separate containers:**
 
@@ -91,7 +91,7 @@ By decoding (base64) the payload above, it should be possible to see the exact c
 
 ### Running the Application (prod mode)
 
-Now, we will run the application as if it were a real app receiving lots of data. After kicking off docker-compose:
+Now, we will run the application as if it was a real app receiving lots of data. After kicking off docker-compose:
 
 **1. Simulate receiving a lot of customer data:**
 
@@ -113,3 +113,56 @@ Before running the scripts, double check if the container name in the bash scrip
 ```
 docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 bash
 ```
+
+Inside the broker, run:
+
+```
+BOOTSTRAP_SERVER=localhost:19092
+TOPIC_NAME=stedi-graph
+kafka-topics --list --bootstrap-server $BOOTSTRAP_SERVER
+kafka-console-consumer --bootstrap-server $BOOTSTRAP_SERVER --topic $TOPIC_NAME
+```
+
+Now, finally, we will submit the PySpark scripts below:
+
+ - `sparkpy-redis-kafka-stream-to-console.py` to subscribe to the `redis-server` topic, base64 decode the payload, and deserialize the JSON to individual fields, then print the fields to the console. The data should include the birth date and email address. 
+- `sparkpy-events-kafka-stream-to-console.py` to subscribe to the `stedi-events` topic and deserialize the JSON (it is not base64 encoded) to individual fields. 
+- `sparkpy-kafka-join.py` to join the customer dataframe and the customer risk dataframes, joining on the email address. It also creates a JSON output to the newly created kafka topic:
+
+```json
+{"customer":"Santosh.Fibonnaci@test.com",
+ "score":"28.5",
+ "email":"Santosh.Fibonnaci@test.com",
+ "birthYear":"1963"
+} 
+```
+
+For this, run:
+
+1. submit-event-kafkastreaming.sh (or submit-event-kafkastreaming.cmd)
+2. submit-redis-kafka-streaming.sh (or submit-redis-kafka-streaming.cmd)
+3. submit-event-kafkajoin.sh (or submit-event-kafkastreaming.cmd) 
+
+The logs can be checked respectively under:
+1. spark/logs/eventstream.log
+2. spark/logs/redis-kafka.log
+3. spark/logs/kafkajoin.log
+
+And the results should look like as follows:
+
+![STEDI_app_stream](project/starter/images/event-kafkastreaming.png)
+![redis_stream](project/starter/images/redis-stream.png)
+![stedi_graph_topic](project/starter/images/stedi-graph-topic.png)
+
+
+**3. Checking the new feature chart:** 
+
+Go back to the initial app screen and check-out the chart being updated almost near real-time while it consumes from the stedi-graph:
+
+Example #1 
+
+![graph_1](project/starter/images/chart_1.png)
+
+Example #2
+
+![graph_2](project/starter/images/chart_2.png)

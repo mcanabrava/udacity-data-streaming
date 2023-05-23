@@ -87,7 +87,11 @@ Formatted version of the payload:
 }
 ```
 
-By decoding (base64) the payload above, it should be possible to see the exact customer information in the element key values.
+By decoding (base64) the payload above, it should be possible to see the exact customer information in the element key values, such as:
+
+```
+"element":"{"customerName":"Sam Test","email":"sam.test@test.com","phone":"8015551212","birthDay":"2001-01-03"}"
+```
 
 ### Running the Application (prod mode)
 

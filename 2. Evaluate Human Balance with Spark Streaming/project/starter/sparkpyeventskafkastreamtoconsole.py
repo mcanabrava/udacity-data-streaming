@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, unbase64, base64, split
 from pyspark.sql.types import StructField, StructType, StringType, FloatType
 
-AppSchema = StructType(
+StediSchema = StructType(
     [
         StructField("customer", StringType()),
         StructField("score", FloatType()),
@@ -13,10 +13,10 @@ AppSchema = StructType(
 # TO-DO: using the spark application object, read a streaming dataframe from the Kafka topic stedi-events as the source
 # Be sure to specify the option that reads all the events from the topic including those that were published before you started the spark stream
 
-spark = SparkSession.builder.appName("stediApp").getOrCreate()
+spark = SparkSession.builder.appName("StediEvents").getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
-stediAppRawStreamingDF = (
+stediAppRawDF = (
     spark.readStream.format("kafka")
     .option("kafka.bootstrap.servers", "kafka:19092")
     .option("subscribe", "stedi-events")
@@ -26,9 +26,10 @@ stediAppRawStreamingDF = (
 
 # TO-DO: cast the value column in the streaming dataframe as a STRING 
 
-stediAppStreamingDF = stediAppRawStreamingDF.selectExpr(
+stediAppDF = stediAppRawDF.selectExpr(
     "cast(key as string) key", "cast(value as string) value"
 )
+
 
 
 # TO-DO: parse the JSON from the single column "value" with a json object in it, like this:
@@ -47,7 +48,7 @@ stediAppStreamingDF = stediAppRawStreamingDF.selectExpr(
 #
 # storing them in a temporary view called CustomerRisk
 
-stediAppStreamingDF.withColumn("value", from_json("value", AppSchema)).select(col("value.*")).createOrReplaceTempView("CustomerRisk")
+stediAppDF.withColumn("value", from_json("value", StediSchema)).select(col("value.*")).createOrReplaceTempView("CustomerRisk")
 
 # TO-DO: execute a sql statement against a temporary view, selecting the customer and the score from the temporary view, creating a dataframe called customerRiskStreamingDF
 

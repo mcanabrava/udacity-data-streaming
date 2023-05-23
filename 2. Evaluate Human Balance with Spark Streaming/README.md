@@ -169,14 +169,21 @@ Now, feel free to submit the PySpark scripts below. The first 2 scripts are only
 
 To run them, input on separate terminals:
 
-1. submit-event-kafkastreaming.sh (or submit-event-kafkastreaming.cmd)
-2. submit-redis-kafka-streaming.sh (or submit-redis-kafka-streaming.cmd)
-3. submit-event-kafkajoin.sh (or submit-event-kafkastreaming.cmd) 
+1. .\submit-event-kafkastreaming.sh (or submit-event-kafkastreaming.cmd)
+2. .\submit-redis-kafka-streaming.sh (or submit-redis-kafka-streaming.cmd)
+3. .\submit-event-kafkajoin.sh (or submit-event-kafkastreaming.cmd) 
 
 The logs can be checked respectively under:
 1. spark/logs/eventstream.log
 2. spark/logs/redis-kafka.log
 3. spark/logs/kafkajoin.log
+
+To get additional logs for the spark master and workers, input:
+
+```
+docker logs 2evaluatehumanbalancewithsparkstreaming-spark-1 > ../../spark/logs/spark-master.log
+docker logs 2evaluatehumanbalancewithsparkstreaming-spark-worker-1-1 > ../../spark/logs/spark-worker.log
+```
 
 And the results should look like as follows:
 

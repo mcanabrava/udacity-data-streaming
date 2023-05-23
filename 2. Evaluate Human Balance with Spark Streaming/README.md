@@ -52,7 +52,7 @@ This will also mounts your repository folder to the Spark Master and Spark Worke
 
 ```
 docker exec -it 2evaluatehumanbalancewithsparkstreaming-redis-1 redis-cli
-zrange customer 0 -1
+zrange Customer 0 -1
 ```
 
 **4. Access Kafka to checkout the topic redis-server in action:** 
@@ -123,7 +123,7 @@ docker logs -f 2evaluatehumanbalancewithsparkstreaming-stedi-1
 
 **2. Submitting the scripts:**
 
-Before running the scripts, double check if the container name in the bash scripts is equal to the one of your kafka's broker by updating it in the .sh and/or .cmd files. 
+The .sh and .cmd scripts will run the python scripts and automatically generate a log file for them. Before running the scripts, double check if the container name inside them is equal to the one of your kafka's broker by updating it in the .sh and/or .cmd files. 
 
 To watch the data arriving to the stedi-score-agg topic after submitting the scripts, you can access kafka's broker bash using:
 
@@ -131,17 +131,25 @@ To watch the data arriving to the stedi-score-agg topic after submitting the scr
 docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 bash
 ```
 
-Inside the broker, adapt the code to your server and topic names and run the following commands ot very the list of topics in your server. 
-
-```
-kafka-topics --list --bootstrap-server localhost:9092
-
-```
-
-Then, to start consuming and displaying messages from the stedi-score-agg topic on the console for testing purposes.
+Now that we are inside the broker, you can run the following commands to start consuming and displaying messages from the stedi-score-agg topic (or any other topic) on the console for testing purposes. At this point, all the topics except stedi-score-agg should be receiving data automatically.
 
 ```
 kafka-console-consumer --bootstrap-server localhost:9092 --topic stedi-score-agg
+```
+
+Needless to say, you should get inside the container before running the script to see the logs in real time. 
+
+For debugging purposes, it is also possible to run the following command to get all the messages inside the topic and check if anything has ever arrived there:
+
+```
+kafka-console-consumer --bootstrap-server localhost:9092 --topic redis-server --from-beginning
+```
+
+And the following one for cleaning the topic:
+```
+kafka-topics --bootstrap-server localhost:9092 --delete --topic redis-server
+kafka-topics --bootstrap-server localhost:9092 --create --topic redis-server --partitions 1 --replication-factor 1
+
 ```
 
 Now, feel free to submit the PySpark scripts below. The first 2 scripts are only used to display messages in the console for debugging purposes. The last script combines the two previous one and writes the data to the topic instead of printing it on the console:
@@ -151,14 +159,15 @@ Now, feel free to submit the PySpark scripts below. The first 2 scripts are only
 - `sparkpy-kafka-join.py` to join the customer dataframe and the customer risk dataframes, joining on the email address. It also creates a JSON output to the newly created kafka topic:
 
 ```json
-{"customer":"Santosh.Fibonnaci@test.com",
- "score":"28.5",
- "email":"Santosh.Fibonnaci@test.com",
- "birthYear":"1963"
+{
+    "customer":"Santosh.Fibonnaci@test.com",
+    "score":"28.5",
+    "email":"Santosh.Fibonnaci@test.com",
+    "birthYear":"1963"
 } 
 ```
 
-To run them, input on the terminal:
+To run them, input on separate terminals:
 
 1. submit-event-kafkastreaming.sh (or submit-event-kafkastreaming.cmd)
 2. submit-redis-kafka-streaming.sh (or submit-redis-kafka-streaming.cmd)

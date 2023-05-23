@@ -7,9 +7,10 @@ The new feature consists of a graph that shows fail risk (will they fall and bec
 To make this insightful data available in real-time, it will be necessary to get data about the users from a Redis database, which will be used as a Kafka source. In addition to this, whenever new data is prodocued by a user, a payload should be published to the Kafka topic redis-server as shown below:
 
 ```json
-{"customer":"Jason.Mitra@test.com",
-"score":7.0,
-"riskDate":"2020-09-14T07:54:06.417Z"
+{
+    "customer":"Jason.Mitra@test.com",
+    "score":7.0,
+    "riskDate":"2020-09-14T07:54:06.417Z"
 }
 ```
 
@@ -95,7 +96,7 @@ By decoding (base64) the payload above, it should be possible to see the exact c
 
 ### Running the Application (prod mode)
 
-Now, we will run the application as if it was a real app receiving lots of data. After kicking off docker-compose:
+Now, we will run the application as if it were a real app receiving lots of data. After kicking off docker-compose:
 
 **1. Simulate receiving a lot of customer data:**
 
@@ -107,7 +108,7 @@ Now, we will run the application as if it was a real app receiving lots of data.
 - To monitor the progress of data generated, from a terminal type: 
 
 ```
-docker logs -f nd029-c2-apache-spark-and-spark-streaming_stedi_1
+docker logs -f 2evaluatehumanbalancewithsparkstreaming-stedi-1
 ```
 
 **2. Submitting the scripts:**
@@ -118,16 +119,15 @@ Before running the scripts, double check if the container name in the bash scrip
 docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 bash
 ```
 
-Inside the broker, run:
+Inside the broker, adapt the code to your server and topic names and run the following commands ot very the list of topics in your server and then to start consuming and displaying messages from the stedi-score-agg topic on the console for testing purposes.
 
 ```
-BOOTSTRAP_SERVER=localhost:19092
-TOPIC_NAME=stedi-graph
-kafka-topics --list --bootstrap-server $BOOTSTRAP_SERVER
-kafka-console-consumer --bootstrap-server $BOOTSTRAP_SERVER --topic $TOPIC_NAME
+kafka-topics --list --bootstrap-server localhost:9092
+kafka-console-consumer --bootstrap-server localhost:9092 --topic stedi-score-agg
+
 ```
 
-Now, finally, we will submit the PySpark scripts below:
+Now, finally, we can submit the PySpark scripts below:
 
  - `sparkpy-redis-kafka-stream-to-console.py` to subscribe to the `redis-server` topic, base64 decode the payload, and deserialize the JSON to individual fields, then print the fields to the console. The data should include the birth date and email address. 
 - `sparkpy-events-kafka-stream-to-console.py` to subscribe to the `stedi-events` topic and deserialize the JSON (it is not base64 encoded) to individual fields. 
@@ -141,7 +141,9 @@ Now, finally, we will submit the PySpark scripts below:
 } 
 ```
 
-For this, run:
+The first 2 scripts are only used to display messages in the console for debugging purposes. The last script combines the two previous one and writes the data to the topic instead of printing it on the console.
+
+To run them, input on the terminal:
 
 1. submit-event-kafkastreaming.sh (or submit-event-kafkastreaming.cmd)
 2. submit-redis-kafka-streaming.sh (or submit-redis-kafka-streaming.cmd)
@@ -154,9 +156,9 @@ The logs can be checked respectively under:
 
 And the results should look like as follows:
 
-![STEDI_app_stream](project/starter/images/event-kafkastreaming.png)
-![redis_stream](project/starter/images/redis-stream.png)
-![stedi_graph_topic](project/starter/images/stedi-graph-topic.png)
+![alt_text](project/starter/images/event-kafkastreaming.png)
+![alt_text](project/starter/images/redis-stream.png)
+![alt_text](project/starter/images/stedi-graph-topic.png)
 
 
 **3. Checking the new feature chart:** 

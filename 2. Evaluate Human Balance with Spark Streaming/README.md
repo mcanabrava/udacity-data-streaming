@@ -73,25 +73,35 @@ In the kafka consumer terminal you will see the following payload appear in the 
 
 Formatted version of the payload:
 ```json
-{"key":"__Q3VzdG9tZXI=__",
-"existType":"NONE",
-"Ch":false,
-"Incr":false,
-"zSetEntries":[{
-"element":"__eyJjdXN0b21lck5hbWUiOiJTYW0gVGVzdCIsImVtYWlsIjoic2FtLnRlc3RAdGVzdC5jb20iLCJwaG9uZSI6IjgwMTU1NTEyMTIiLCJiaXJ0aERheSI6IjIwMDEtMDEtMDMifQ==__",
-"Score":0.0
-}],
-"zsetEntries":[{
-"element":"eyJjdXN0b21lck5hbWUiOiJTYW0gVGVzdCIsImVtYWlsIjoic2FtLnRlc3RAdGVzdC5jb20iLCJwaG9uZSI6IjgwMTU1NTEyMTIiLCJiaXJ0aERheSI6IjIwMDEtMDEtMDMifQ==",
-"score":0.0
-}]
+{
+    "key":"__Q3VzdG9tZXI=__",
+    "existType":"NONE",
+    "Ch":false,
+    "Incr":false,
+    "zSetEntries":[
+        {
+        "element":"__eyJjdXN0b21lck5hbWUiOiJTYW0gVGVzdCIsImVtYWlsIjoic2FtLnRlc3RAdGVzdC5jb20iLCJwaG9uZSI6IjgwMTU1NTEyMTIiLCJiaXJ0aERheSI6IjIwMDEtMDEtMDMifQ==__",
+        "Score":0.0
+        }
+    ],
+    "zsetEntries":[
+        {
+        "element":"eyJjdXN0b21lck5hbWUiOiJTYW0gVGVzdCIsImVtYWlsIjoic2FtLnRlc3RAdGVzdC5jb20iLCJwaG9uZSI6IjgwMTU1NTEyMTIiLCJiaXJ0aERheSI6IjIwMDEtMDEtMDMifQ==",
+        "score":0.0
+        }
+    ]
 }
 ```
 
 By decoding (base64) the payload above, it should be possible to see the exact customer information in the element key values, such as:
 
 ```
-"element":"{"customerName":"Sam Test","email":"sam.test@test.com","phone":"8015551212","birthDay":"2001-01-03"}"
+"element":"{
+    "customerName":"Sam Test",
+    "email":"sam.test@test.com",
+    "phone":"8015551212",
+    "birthDay":"2001-01-03"
+    }"
 ```
 
 ### Running the Application (prod mode)
@@ -113,21 +123,28 @@ docker logs -f 2evaluatehumanbalancewithsparkstreaming-stedi-1
 
 **2. Submitting the scripts:**
 
-Before running the scripts, double check if the container name in the bash scripts is equal to the one of your kafka's broker by updating it in the .sh and .cmd files. You can access kafka's broker bash using:
+Before running the scripts, double check if the container name in the bash scripts is equal to the one of your kafka's broker by updating it in the .sh and/or .cmd files. 
+
+To watch the data arriving to the stedi-score-agg topic after submitting the scripts, you can access kafka's broker bash using:
 
 ```
 docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 bash
 ```
 
-Inside the broker, adapt the code to your server and topic names and run the following commands ot very the list of topics in your server and then to start consuming and displaying messages from the stedi-score-agg topic on the console for testing purposes.
+Inside the broker, adapt the code to your server and topic names and run the following commands ot very the list of topics in your server. 
 
 ```
 kafka-topics --list --bootstrap-server localhost:9092
-kafka-console-consumer --bootstrap-server localhost:9092 --topic stedi-score-agg
 
 ```
 
-Now, finally, we can submit the PySpark scripts below:
+Then, to start consuming and displaying messages from the stedi-score-agg topic on the console for testing purposes.
+
+```
+kafka-console-consumer --bootstrap-server localhost:9092 --topic stedi-score-agg
+```
+
+Now, feel free to submit the PySpark scripts below. The first 2 scripts are only used to display messages in the console for debugging purposes. The last script combines the two previous one and writes the data to the topic instead of printing it on the console:
 
  - `sparkpy-redis-kafka-stream-to-console.py` to subscribe to the `redis-server` topic, base64 decode the payload, and deserialize the JSON to individual fields, then print the fields to the console. The data should include the birth date and email address. 
 - `sparkpy-events-kafka-stream-to-console.py` to subscribe to the `stedi-events` topic and deserialize the JSON (it is not base64 encoded) to individual fields. 
@@ -140,8 +157,6 @@ Now, finally, we can submit the PySpark scripts below:
  "birthYear":"1963"
 } 
 ```
-
-The first 2 scripts are only used to display messages in the console for debugging purposes. The last script combines the two previous one and writes the data to the topic instead of printing it on the console.
 
 To run them, input on the terminal:
 
@@ -167,8 +182,8 @@ Go back to the initial app screen and check-out the chart being updated almost n
 
 Example #1 
 
-![graph_1](project/starter/images/chart_1.png)
+![chart_example_1](project/starter/images/chart_1.png)
 
 Example #2
 
-![graph_2](project/starter/images/chart_2.png)
+![chart_example_2](project/starter/images/chart_2.png)

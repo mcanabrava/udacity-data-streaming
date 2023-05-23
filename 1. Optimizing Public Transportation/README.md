@@ -36,7 +36,7 @@ Consider the following configuration commands to be run before each application:
 - configuration commands
 - python simulation.py
 
-**2. Start the Faust Stream Processing App:** this will start the ETL from the topic "org.chicago.cta.stations" and sink it into "org.chicago.cta.stations.table.v1"
+**2. Start the Faust Stream Processing App:** this will start the ETL from the topic "chicago.arrivals.{station_name}" and sink it into "org.chicago.cta.stations.table.v1"
 
 - configuration commands
 - faust -A faust_stream worker -l info

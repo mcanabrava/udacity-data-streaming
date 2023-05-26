@@ -16,7 +16,7 @@ To make this insightful data available in real-time, it will be necessary to get
 
 Therefore, the technical challenge consists of generating a new payload in a Kafka topic using Spark Streaming to make the aggregated information for all the scores data available in the application. The data should be grouped by the birth year, which can be captured from Redis. The following image summarizes the architecture:
 
-![alt_text](./images/arch.png "Architecture")
+![alt_text](./images/arch2.png "Architecture")
 
 ### Running the Application (test mode)
 

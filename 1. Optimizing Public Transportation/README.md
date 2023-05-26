@@ -15,7 +15,7 @@ To make the information available on the UI, it is first required to develop the
 
 The detailed architecture at the topic level can be seen below:
 
-![alt_text](./images/detailed_architecture.png "Detailed Architecture")
+![alt_text](./images/detailed_architecture2.png "Detailed Architecture")
 
 
 ### Running the Application

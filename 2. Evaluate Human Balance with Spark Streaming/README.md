@@ -22,13 +22,11 @@ Therefore, the technical challenge consists of generating a new payload in a Kaf
 
 ```Please, scroll down to Running the Application (prod mode) for the definitive test.```
 
-**1. Use docker compose up file at the root of the repository to create 9 separate containers:**
+**1. Use docker compose up file at the root of the repository to create 7 separate containers:**
 
 - Redis
 - Zookeeper (for Kafka)
 - Kafka
-- Banking Simulation
-- Trucking Simulation
 - STEDI (Application used in Final Project)
 - Kafka Connect with Redis Source Connector
 - Spark Master

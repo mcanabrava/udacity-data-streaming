@@ -46,7 +46,7 @@ services:
       REDIS_PORT: 6379
       REDIS_DB: 0
       KAFKA_BROKER: kafka:19092
-      KAFKA_RISK_TOPIC: stedi-graph
+      KAFKA_RISK_TOPIC: stedi-score-agg
     depends_on:
       - "kafka"
       - "redis"      

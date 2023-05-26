@@ -194,7 +194,7 @@ And the results should look like as follows:
 
 **3. Checking the new feature chart:** 
 
-Go back to the initial app screen and check-out the chart being updated almost near real-time while it consumes from the stedi-graph:
+Go back to the initial app screen and check-out the chart being updated almost near real-time while it consumes from the stedi-score-agg topic:
 
 Example #1 
 

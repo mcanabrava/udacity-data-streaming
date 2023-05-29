@@ -45,6 +45,7 @@ StediSchema = StructType(
 
 spark = SparkSession.builder \
     .appName("RedisServer") \
+    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.6") \
     .config("spark.master", "local[*]") \
     .config("spark.sql.streaming.checkpointLocation", "/tmp/checkPointKafka") \
     .config("spark.kafka.bootstrap.servers", "localhost:19092") \

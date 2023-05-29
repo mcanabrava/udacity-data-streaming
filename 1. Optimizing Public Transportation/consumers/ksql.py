@@ -1,9 +1,7 @@
 """Configures KSQL to combine station and turnstile data"""
 import json
 import logging
-
 import requests
-
 import topic_check
 
 
@@ -18,7 +16,7 @@ CREATE TABLE turnstile (
     station_name VARCHAR,
     line VARCHAR
 ) WITH (
-    KAFKA_TOPIC = 'data.turnstile',
+    KAFKA_TOPIC = 'org.chicago.cta.turnstile',
     VALUE_FORMAT = 'AVRO',
     KEY = 'station_id'
 );

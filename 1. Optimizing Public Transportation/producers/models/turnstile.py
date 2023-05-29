@@ -31,7 +31,7 @@ class Turnstile(Producer):
         # Creates a topic, number of partitions, and number of
         # replicas
         super().__init__(
-            f"data.turnstile",
+            f"org.chicago.cta.turnstile",
             key_schema=Turnstile.key_schema,
             value_schema=Turnstile.value_schema,
             num_partitions=1,

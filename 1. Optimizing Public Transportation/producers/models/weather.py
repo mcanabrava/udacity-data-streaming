@@ -67,20 +67,24 @@ class Weather(Producer):
 
     def run(self, month):
         self._set_weather(month)
-        # Posts a weather event to REST Proxy using
-        # the Avro schemas. Verify that you are using the correct Content-Type header.
-
-        resp = requests.post(
-           f"{self.rest_proxy_url}/topics/{self.topic_name}",
-           headers={"Content-Type": "application/vnd.kafka.avro.v2+json"},
-           data=json.dumps({
-               "key_schema": json.dumps(Weather.key_schema),
-               "value_schema": json.dumps(Weather.value_schema),
-               "records": [{
+        # TODO: Complete the function by posting a weather event to REST Proxy. Make sure to
+        # specify the Avro schemas and verify that you are using the correct Content-Type header.
+        headers = {"Content-Type": "application/vnd.kafka.avro.v2+json"}
+        payload = {
+            "key_schema": json.dumps(Weather.key_schema),
+            "value_schema": json.dumps(Weather.value_schema),
+            "records": [
+                {
                     "key": {"timestamp": self.time_millis()},
                     "value": {"temperature": self.temp, "status": self.status.name}
-                }]
-            }),
+                }
+            ]
+        }
+
+        resp = requests.post(
+            f"{self.rest_proxy_url}/topics/{self.topic_name}",
+            headers=headers,
+            data=json.dumps(payload)
         )
         resp.raise_for_status()
 

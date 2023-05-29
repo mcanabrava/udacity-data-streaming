@@ -55,25 +55,24 @@ class Line:
         )
 
     def process_message(self, message):
-        """Given a kafka message, extract data"""
-        # Based on the message topic, call the appropriate handler.
-        if message.topic() == "org.chicago.cta.stations.table":
+        """Process a Kafka message and extract data"""
+
+        topic = message.topic()
+        value = json.loads(message.value())
+
+        if topic == "org.chicago.cta.stations.table":
             try:
-                value = json.loads(message.value())
                 self._handle_station(value)
             except Exception as e:
-                logger.fatal("bad station? %s, %s", value, e)
-        elif "arrivals" in message.topic(): 
+                logger.fatal("Error: %s, %s", value, e)
+        elif "arrivals" in topic:
             self._handle_arrival(message)
-        elif message.topic() == "TURNSTILE_SUMMARY": 
-            json_data = json.loads(message.value())
-            station_id = json_data.get("STATION_ID")
+        elif topic == "TURNSTILE_SUMMARY":
+            station_id = value.get("STATION_ID")
             station = self.stations.get(station_id)
             if station is None:
-                logger.debug("unable to handle message due to missing station")
+                logger.debug("Missing station")
                 return
-            station.process_message(json_data)
+            station.process_message(value)
         else:
-            logger.info(
-                "unable to find handler for message from topic %s", message.topic()
-            )
+            logger.info("Unable to handle message: %s", topic)

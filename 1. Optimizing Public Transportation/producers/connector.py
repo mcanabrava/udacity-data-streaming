@@ -21,38 +21,32 @@ def configure_connector():
         logging.info("connector already created skipping recreation")
         return
 
-    resp = requests.post(
-       KAFKA_CONNECT_URL,
-       headers={"Content-Type": "application/json"},
-       data=json.dumps({
-           "name": CONNECTOR_NAME,
-           "config": {
-               "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
-               "key.converter": "org.apache.kafka.connect.json.JsonConverter",
-               "key.converter.schemas.enable": "false",
-               "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-               "value.converter.schemas.enable": "false",
-               "batch.max.rows": "500",
-               "connection.url": "jdbc:postgresql://localhost:5432/cta",
-               "connection.user": "cta_admin",
-               "connection.password": "chicago",
-               "table.whitelist": "stations",
-               "mode": "incrementing",
-               "incrementing.column.name": "stop_id",
-               "topic.prefix": "org.chicago.cta",
-               "poll.interval.ms": "30000",
-           }
-       }),
-    )
+    url = "http://localhost:8083/connectors"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "name": "stations",
+        "config": {
+            "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+            "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+            "key.converter.schemas.enable": "false",
+            "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+            "value.converter.schemas.enable": "false",
+            "batch.max.rows": "500",
+            "connection.url": "jdbc:postgresql://localhost:5432/cta",
+            "connection.user": "cta_admin",
+            "connection.password": "chicago",
+            "table.whitelist": "stations",
+            "mode": "incrementing",
+            "incrementing.column.name": "stop_id",
+            "topic.prefix": "org.chicago.cta.",
+            "poll.interval.ms": "30000"
+        }
+    }
 
-    ## Ensure a healthy response was given
-    try:
-        resp.raise_for_status()
-    except:
-        print(f"failed to create the connector: {json.dumps(resp.json(), indent=2)}")
-        exit(1)
+    resp = requests.post(url, headers=headers, data=json.dumps(payload))
+    resp.raise_for_status()
+    logging.info("Connector created successfully")
 
-    logging.debug("connector created successfully")
 
 
 if __name__ == "__main__":

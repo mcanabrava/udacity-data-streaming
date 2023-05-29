@@ -1,6 +1,5 @@
 """Defines trends calculations for stations"""
 import logging
-
 import faust
 
 
@@ -33,15 +32,15 @@ class TransformedStation(faust.Record):
 #   places it into a new topic with only the necessary information.
 app = faust.App("stations-stream", broker="kafka://localhost:9092", store="memory://")
 # input Kafka Topic. 
-topic = app.topic("org.chicago.cta.stations", value_type=Station)
+stations_topic = app.topic("org.chicago.cta.stations", value_type=Station)
 # output Kafka Topic
-out_topic = app.topic("org.chicago.cta.stations.table", value_type=TransformedStation, partitions=1)
+table_topic = app.topic("org.chicago.cta.stations.table", value_type=TransformedStation, partitions=1)
 
 table = app.Table(
     "org.chicago.cta.stations.table",
     default=int,
     partitions=1,
-    changelog_topic=out_topic
+    changelog_topic=table_topic
 )
 
 
@@ -52,20 +51,22 @@ table = app.Table(
 def get_line_color(red, blue, green):
     if red:
         return "red"
-    if blue:
-        return "red"
-    if green:
-        return "red"
-    return ""
+    elif blue:
+        return "blue"
+    elif green:
+        return "green"
+    else:
+        return ""
 
-@app.agent(topic)
+
+@app.agent(stations_topic)
 async def transform_station_stream(stationEvents):
-    async for stationEvent in stationEvents:
+    async for event in stationEvents:
         sanitized = TransformedStation(
-            station_id=stationEvent.station_id,
-            station_name=stationEvent.station_name,
-            order=stationEvent.order,
-            line=get_line_color(stationEvent.red, stationEvent.blue, stationEvent.green),
+            station_id=event.station_id,
+            station_name=event.station_name,
+            order=event.order,
+            line=get_line_color(event.red, event.blue, event.green),
         )      
         
         table[sanitized.station_id] = sanitized

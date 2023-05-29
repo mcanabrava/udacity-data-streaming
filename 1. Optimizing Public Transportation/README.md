@@ -24,9 +24,11 @@ The application can be run in your own machine using the Host URL directly or us
 
 ![alt_text](./images/hosts.png "Hosts")
 
-To start the simulation, it is critical to open a terminal window for each piece of the code and run both producers and consumers the same time.
+To start the simulation, it is critical to open a terminal window for each piece of the code and run both producers and consumers the same time. Before that, it is worth double checking if all the services are active in docker compose by running a docker ps or ps -ef when using Linux. The following print exemplifies the list of processes running on Linux
 
-Consider the following configuration commands to be run before each application:
+![alt_text](./images/service-list.png "Services")
+
+Now, consider the following configuration commands to be run before each application:
 - virtualenv venv
 - . venv/bin/activate
 - pip install -r requirements.txt
@@ -36,7 +38,7 @@ Consider the following configuration commands to be run before each application:
 - configuration commands
 - python simulation.py
 
-**2. Start the Faust Stream Processing App:** this will start the ETL from the topic "chicago.arrivals.{station_name}" and sink it into "org.chicago.cta.stations.table.v1"
+**2. Start the Faust Stream Processing App:** this will start the ETL from the topic "chicago.arrivals.{station_name}" and sink it into "org.chicago.cta.stations.table"
 
 - configuration commands
 - faust -A faust_stream worker -l info

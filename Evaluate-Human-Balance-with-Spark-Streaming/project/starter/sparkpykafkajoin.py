@@ -45,7 +45,6 @@ StediSchema = StructType(
 
 spark = SparkSession.builder \
     .appName("RedisServer") \
-    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
     .config("spark.master", "local[*]") \
     .config("spark.sql.streaming.checkpointLocation", "/tmp/checkPointKafka") \
     .config("spark.kafka.bootstrap.servers", "localhost:9092") \
@@ -145,7 +144,7 @@ emailAndBirthYearStreamingDF = emailAndBirthYearStreamingDF.select("birth_year",
 # TO-DO: using the spark application object, read a streaming dataframe from the Kafka topic stedi-events as the source
 # Be sure to specify the option that reads all the events from the topic including those that were published before you started the spark stream
 
-spark = SparkSession.builder.appName("StediEvents").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2").getOrCreate()
+spark = SparkSession.builder.appName("StediEvents").getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
 stediAppRawDF = (

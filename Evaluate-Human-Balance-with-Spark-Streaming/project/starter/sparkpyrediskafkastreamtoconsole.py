@@ -44,7 +44,7 @@ StediSchema = StructType(
 #TO-DO: set the spark log level to WARN
 
 
-spark = SparkSession.builder.appName("RedisServer").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2").getOrCreate()
+spark = SparkSession.builder.appName("RedisServer").getOrCreate()
 #config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2").
 spark.sparkContext.setLogLevel("WARN")
 

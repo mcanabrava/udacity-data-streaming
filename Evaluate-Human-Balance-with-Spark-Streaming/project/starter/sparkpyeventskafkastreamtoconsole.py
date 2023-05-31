@@ -2,6 +2,8 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, unbase64, base64, split
 from pyspark.sql.types import StructField, StructType, StringType, FloatType
 
+print("starting script")
+
 StediSchema = StructType(
     [
         StructField("customer", StringType()),
@@ -13,8 +15,11 @@ StediSchema = StructType(
 # TO-DO: using the spark application object, read a streaming dataframe from the Kafka topic stedi-events as the source
 # Be sure to specify the option that reads all the events from the topic including those that were published before you started the spark stream
 
-spark = SparkSession.builder.appName("StediEvents").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.6").getOrCreate()
-spark.sparkContext.setLogLevel("WARN")
+spark = SparkSession.builder.appName("StediEvents").getOrCreate()
+spark.sparkContext.setLogLevel("DEBUG")
+
+print("connected to spark")
+
 
 stediAppRawDF = (
     spark.readStream.format("kafka")
@@ -69,3 +74,5 @@ customerRiskStreamingDF.writeStream.outputMode("append").format("console").start
 # Run the python script by running the command from the terminal:
 # /home/workspace/submit-event-kafka-streaming.sh
 # Verify the data looks correct 
+
+print("finishing process")

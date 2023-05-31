@@ -45,10 +45,10 @@ StediSchema = StructType(
 
 spark = SparkSession.builder \
     .appName("RedisServer") \
-    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.6") \
+    .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
     .config("spark.master", "local[*]") \
     .config("spark.sql.streaming.checkpointLocation", "/tmp/checkPointKafka") \
-    .config("spark.kafka.bootstrap.servers", "localhost:19092") \
+    .config("spark.kafka.bootstrap.servers", "localhost:9092") \
     .getOrCreate()
 
 spark.sparkContext.setLogLevel("WARN")
@@ -58,7 +58,7 @@ spark.sparkContext.setLogLevel("WARN")
 
 redisServerRawDF = (
     spark.readStream.format("kafka")
-    .option("kafka.bootstrap.servers", "kafka:19092")
+    .option("kafka.bootstrap.servers", "localhost:9092")
     .option("subscribe", "redis-server")
     .option("startingOffsets", "earliest")
     .load()
@@ -145,12 +145,12 @@ emailAndBirthYearStreamingDF = emailAndBirthYearStreamingDF.select("birth_year",
 # TO-DO: using the spark application object, read a streaming dataframe from the Kafka topic stedi-events as the source
 # Be sure to specify the option that reads all the events from the topic including those that were published before you started the spark stream
 
-spark = SparkSession.builder.appName("StediEvents").getOrCreate()
+spark = SparkSession.builder.appName("StediEvents").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2").getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
 stediAppRawDF = (
     spark.readStream.format("kafka")
-    .option("kafka.bootstrap.servers", "kafka:19092")
+    .option("kafka.bootstrap.servers", "localhost:9092")
     .option("subscribe", "stedi-events")
     .option("startingOffsets", "earliest")
     .load()
@@ -219,7 +219,7 @@ writeQuery = joinedDF \
     .selectExpr("CAST(customer AS STRING) AS key", "to_json(struct(*)) AS value") \
     .writeStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:19092") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
     .option("topic", "stedi-score-agg") \
     .option("checkpointLocation", "/tmp/checkPointKafka") \
     .outputMode("update") \

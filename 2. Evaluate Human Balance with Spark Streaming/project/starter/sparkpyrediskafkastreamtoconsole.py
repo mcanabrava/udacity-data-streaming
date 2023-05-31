@@ -55,7 +55,7 @@ spark.sparkContext.setLogLevel("WARN")
 redisServerRawDF = spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "kafka:19092") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
     .option("subscribe", "redis-server") \
     .option("startingOffsets", "earliest") \
     .load()

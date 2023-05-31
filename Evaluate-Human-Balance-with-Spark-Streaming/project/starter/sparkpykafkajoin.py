@@ -107,29 +107,15 @@ redisServerDF.withColumn("value", from_json("value", RedisSchema)).select(col("v
 
 encodedDF = spark.sql("select key, zSetEntries[0].element as encodedCustomer from RedisSortedSet")
 
-
-# TO-DO: take the encodedCustomer column which is base64 encoded at first like this:
-# +--------------------+
-# |            customer|
-# +--------------------+
-# |[7B 22 73 74 61 7...|
-# +--------------------+
-
-# and convert it to clear json like this:
-# +--------------------+
-# |            customer|
-# +--------------------+
-# |{"customerName":"...|
-#+--------------------+
-#
 # with this JSON format: {"customerName":"Sam Test","email":"sam.test@test.com","phone":"8015551212","birthDay":"2001-01-03"}
 
-
-decodedDF = encodedDF.withColumn("customer", unbase64(encodedDF.encodedCustomer).cast("string"))
-
+decodedDF = encodedDF.withColumn("encodedCustomer", unbase64(encodedDF.encodedCustomer).cast("string"))
 
 # TO-DO: parse the JSON in the Customer record and store in a temporary view called CustomerRecords
-decodedDF.withColumn("customer", from_json("value", CustomerSchema)).select(col("value.*")).createOrReplaceTempView("CustomerRecords")
+decodedDF\
+    .withColumn("customer",from_json("encodedCustomer", CustomerSchema))\
+    .select(col("customer.*"))\
+    .createOrReplaceTempView("CustomerRecords")
 
 # TO-DO: JSON parsing will set non-existent fields to null, so let's select just the fields we want, where they are not null as a new dataframe called emailAndBirthDayStreamingDF
 emailAndBirthDayStreamingDF = decodedDF.na.drop(subset=["email", "birthDay"])

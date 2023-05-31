@@ -58,7 +58,7 @@ zrange Customer 0 -1
 - In another terminal run this command to start monitoring the kafka topic:
 
 ```
-docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 kafka-console-consumer --bootstrap-server localhost:9092 --topic redis-server
+docker exec -it evaluatehumanbalancewithsparkstreaming-kafka-1 kafka-console-consumer --bootstrap-server localhost:9092 --topic redis-server
 ```
 
 - Back in the redis-cli, type: 

@@ -49,7 +49,7 @@ This will also mounts your repository folder to the Spark Master and Spark Worke
 - Connect to the redis instance and retrieve the list of customers using:
 
 ```
-docker exec -it 2evaluatehumanbalancewithsparkstreaming-redis-1 redis-cli
+docker exec -it evaluate-human-balance-with-spark-streaming-redis-1 redis-cli
 zrange Customer 0 -1
 ```
 
@@ -58,7 +58,7 @@ zrange Customer 0 -1
 - In another terminal run this command to start monitoring the kafka topic:
 
 ```
-docker exec -it evaluatehumanbalancewithsparkstreaming-kafka-1 kafka-console-consumer --bootstrap-server localhost:9092 --topic redis-server
+docker exec -it valuate-human-balance-with-spark-streaming-kafka-1 kafka-console-consumer --bootstrap-server localhost:9092 --topic redis-server
 ```
 
 - Back in the redis-cli, type: 
@@ -116,7 +116,7 @@ Now, we will run the application as if it were a real app receiving lots of data
 - To monitor the progress of data generated, from a terminal type: 
 
 ```
-docker logs -f 2evaluatehumanbalancewithsparkstreaming-stedi-1
+docker logs -f evaluate-human-balance-with-spark-streaming-stedi-1
 ```
 
 **2. Submitting the scripts:**
@@ -126,7 +126,7 @@ The .sh and .cmd scripts will run the python scripts and automatically generate 
 To watch the data arriving to the stedi-score-agg topic after submitting the scripts, you can access kafka's broker bash using:
 
 ```
-docker exec -it 2evaluatehumanbalancewithsparkstreaming-kafka-1 bash
+docker exec -it evaluate-human-balance-with-spark-streaming-kafka-1 bash
 ```
 
 Now that we are inside the broker, you can run the following commands to start consuming and displaying messages from the stedi-score-agg topic (or any other topic) on the console for testing purposes. At this point, all the topics except stedi-score-agg should be receiving data automatically.
@@ -179,8 +179,8 @@ The logs can be checked respectively under:
 To get additional logs for the spark master and workers, input:
 
 ```
-docker logs 2evaluatehumanbalancewithsparkstreaming-spark-1 > ../../spark/logs/spark-master.log
-docker logs 2evaluatehumanbalancewithsparkstreaming-spark-worker-1-1 > ../../spark/logs/spark-worker.log
+docker logs evaluate-human-balance-with-spark-streaming-spark-1 > ../../spark/logs/spark-master.log
+docker logs evaluate-human-balance-with-spark-streaming-spark-worker-1-1 > ../../spark/logs/spark-worker.log
 ```
 
 And the results should look like as follows:

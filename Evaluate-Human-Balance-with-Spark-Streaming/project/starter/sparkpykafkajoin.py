@@ -55,13 +55,13 @@ spark.sparkContext.setLogLevel("WARN")
 # TO-DO: using the spark application object, read a streaming dataframe from the Kafka topic redis-server as the source
 # Be sure to specify the option that reads all the events from the topic including those that were published before you started the spark stream
 
-redisServerRawDF = (
-    spark.readStream.format("kafka")
-    .option("kafka.bootstrap.servers", "localhost:9092")
-    .option("subscribe", "redis-server")
-    .option("startingOffsets", "earliest")
+redisServerRawDF = spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "redis-server") \
+    .option("startingOffsets", "earliest") \
     .load()
-)
 
 # TO-DO: cast the value column in the streaming dataframe as a STRING 
 
@@ -133,13 +133,14 @@ emailAndBirthYearStreamingDF = emailAndBirthYearStreamingDF.select("birth_year",
 spark = SparkSession.builder.appName("StediEvents").getOrCreate()
 spark.sparkContext.setLogLevel("WARN")
 
-stediAppRawDF = (
-    spark.readStream.format("kafka")
-    .option("kafka.bootstrap.servers", "localhost:9092")
-    .option("subscribe", "stedi-events")
-    .option("startingOffsets", "earliest")
+stediAppRawDF = spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "stedi-events") \
+    .option("startingOffsets", "earliest") \
     .load()
-)
+
 
 # TO-DO: cast the value column in the streaming dataframe as a STRING 
 

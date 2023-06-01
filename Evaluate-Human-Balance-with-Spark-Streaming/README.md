@@ -53,6 +53,8 @@ docker exec -it evaluate-human-balance-with-spark-streaming-redis-1 redis-cli
 zrange Customer 0 -1
 ```
 
+![alt_text](./images/redis-data.png "Redis Data")
+
 **4. Access Kafka to checkout the topic redis-server in action:** 
 
 - In another terminal run this command to start monitoring the kafka topic:
@@ -91,6 +93,8 @@ Formatted version of the payload:
 }
 ```
 
+![alt_text](./images/redis-server.png "Redis Server")
+
 By decoding (base64) the payload above, it should be possible to see the exact customer information in the element key values, such as:
 
 ```
@@ -119,6 +123,8 @@ Now, we will run the application as if it were a real app receiving lots of data
 docker logs -f evaluate-human-balance-with-spark-streaming-stedi-1
 ```
 
+![alt_text](./images/stedi-cointaner-logs.png "Stedi Container Logs")
+
 **2. Submitting the scripts:**
 
 The .sh and .cmd scripts will run the python scripts and automatically generate a log file for them. Before running the scripts, double check if the container name inside them is equal to the one of your kafka's broker by updating it in the .sh and/or .cmd files. 
@@ -134,6 +140,11 @@ Now that we are inside the broker, you can run the following commands to start c
 ```
 kafka-console-consumer --bootstrap-server localhost:9092 --topic stedi-score-agg
 ```
+
+For example, you can see in the print below that the stedi-events topic is receiving the same customer data that exists inside the stedi container logs from the previous image.
+
+![alt_text](./images/stedi-events-topic.png "Stedi Events Topic")
+
 
 Needless to say, you should get inside the container before running the script to see the logs in real time. 
 

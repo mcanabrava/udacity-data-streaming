@@ -115,7 +115,7 @@ decodedDF\
 
 # TO-DO: JSON parsing will set non-existent fields to null, so let's select just the fields we want, where they are not null as a new dataframe called emailAndBirthDayStreamingDF
 
-emailAndBirthDayStreamingDF = decodedDF.na.drop(subset=["email", "birthDay"])
+emailAndBirthDayStreamingDF = spark.sql("select email, birthDay from CustomerRecords where email is not null And birthDay is not null")
 
 
 # TO-DO: from the emailAndBirthDayStreamingDF dataframe select the email and the birth year (using the split function)

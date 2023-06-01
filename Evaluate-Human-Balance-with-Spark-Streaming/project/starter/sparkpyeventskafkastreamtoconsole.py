@@ -21,13 +21,13 @@ spark.sparkContext.setLogLevel("DEBUG")
 print("connected to spark")
 
 
-stediAppRawDF = (
-    spark.readStream.format("kafka")
-    .option("kafka.bootstrap.servers", "localhost:9092")
-    .option("subscribe", "stedi-events")
-    .option("startingOffsets", "earliest")
+stediAppRawDF = spark \
+    .readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "stedi-events") \
+    .option("startingOffsets", "earliest") \
     .load()
-)
 
 # TO-DO: cast the value column in the streaming dataframe as a STRING 
 

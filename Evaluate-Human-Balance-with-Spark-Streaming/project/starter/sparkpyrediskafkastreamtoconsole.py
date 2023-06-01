@@ -1,5 +1,4 @@
 from pyspark.sql import SparkSession
-import os
 from pyspark.sql.functions import from_json, col, unbase64, split
 from pyspark.sql.types import StructField, StructType, StringType, BooleanType, ArrayType, FloatType
 
@@ -44,8 +43,13 @@ StediSchema = StructType(
 #TO-DO: set the spark log level to WARN
 
 
-spark = SparkSession.builder.appName("RedisServer").getOrCreate()
-#config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2").
+spark = SparkSession.builder \
+    .appName("RedisServer") \
+    .config("spark.master", "local[*]") \
+    .config("spark.sql.streaming.checkpointLocation", "/tmp/checkPointKafka") \
+    .config("spark.kafka.bootstrap.servers", "localhost:9092") \
+    .getOrCreate()
+
 spark.sparkContext.setLogLevel("WARN")
 
 
@@ -62,7 +66,7 @@ redisServerRawDF = spark \
 
 # TO-DO: cast the value column in the streaming dataframe as a STRING 
 
-redisServerDF = redisServerRawDF.selectExpr("cast(value as string) value") ## double-check if casting the key is needed
+redisServerDF = redisServerRawDF.selectExpr("cast(value as string) value")
 
 # TO-DO:; parse the single column "value" with a json object in it, like this:
 # +------------+
@@ -122,9 +126,7 @@ emailAndBirthDayStreamingDF = spark.sql("select email, birthDay from CustomerRec
 # TO-DO: Split the birth year as a separate field from the birthday
 # TO-DO: Select only the birth year and email fields as a new streaming data frame called emailAndBirthYearStreamingDF
 
-emailAndBirthYearStreamingDF = emailAndBirthDayStreamingDF.withColumn("birth_year", split(col("birthday"), "-")[0])
-emailAndBirthYearStreamingDF = emailAndBirthYearStreamingDF.select("birth_year", "email")
-
+emailAndBirthYearStreamingDF = emailAndBirthDayStreamingDF.select("email", split(emailAndBirthDayStreamingDF.birthDay,"-").getItem(0).alias("birthYear"))
 
 # TO-DO: sink the emailAndBirthYearStreamingDF dataframe to the console in append mode
 # 

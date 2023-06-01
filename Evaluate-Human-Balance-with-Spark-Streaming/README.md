@@ -53,7 +53,7 @@ docker exec -it evaluate-human-balance-with-spark-streaming-redis-1 redis-cli
 zrange Customer 0 -1
 ```
 
-![alt_text](./images/redis-data.png "Redis Data")
+![alt_text](./images/redis-data-1.png "Redis Data")
 
 **4. Access Kafka to checkout the topic redis-server in action:** 
 
@@ -123,7 +123,7 @@ Now, we will run the application as if it were a real app receiving lots of data
 docker logs -f evaluate-human-balance-with-spark-streaming-stedi-1
 ```
 
-![alt_text](./images/stedi-cointaner-logs.png "Stedi Container Logs")
+![alt_text](./images/stedi-container-logs.png "Stedi Container Logs")
 
 **2. Submitting the scripts:**
 

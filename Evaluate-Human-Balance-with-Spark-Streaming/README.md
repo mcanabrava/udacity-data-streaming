@@ -194,21 +194,14 @@ docker logs evaluate-human-balance-with-spark-streaming-spark-1 > ../../spark/lo
 docker logs evaluate-human-balance-with-spark-streaming-spark-worker-1-1 > ../../spark/logs/spark-worker.log
 ```
 
-And the results should look like as follows:
-
-![alt_text](project/starter/images/event-kafkastreaming.png)
-![alt_text](project/starter/images/redis-stream.png)
-![alt_text](project/starter/images/stedi-graph-topic.png)
-
-
 **3. Checking the new feature chart:** 
 
 Go back to the initial app screen and check-out the chart being updated almost near real-time while it consumes from the stedi-score-agg topic:
 
 Example #1 
 
-![chart_example_1](project/starter/images/chart_1.png)
+![chart_example_1](project/starter/images/chart1.png)
 
 Example #2
 
-![chart_example_2](project/starter/images/chart_2.png)
+![chart_example_2](project/starter/images/chart2.png)

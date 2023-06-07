@@ -200,8 +200,8 @@ Go back to the initial app screen and check-out the chart being updated almost n
 
 Example #1 
 
-![chart_example_1](project/starter/images/chart1.png)
+![chart_example_1](./images/chart1.png)
 
 Example #2
 
-![chart_example_2](project/starter/images/chart2.png)
+![chart_example_2](./images/chart2.png)
